@@ -1,18 +1,41 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class="container">
+    <Sidebar :characters="characters" />
+    <PanelTab />
   </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import { defineComponent } from 'vue';
+import { useQuery, useResult, useMutation } from '@vue/apollo-composable';
+import Sidebar from '../components/SideBar.vue';
+import PanelTab from '../components/PanelTab.vue';
+import { getCharactersQuery } from '../graphql/queries';
+import { selectCharacterMutation } from '../localState/mutations';
 
-@Options({
+export default defineComponent({
+  name: 'Home',
   components: {
-    HelloWorld,
+    Sidebar,
+    PanelTab,
   },
-})
-export default class Home extends Vue {}
+  setup() {
+    const { mutate: selectCharacter } = useMutation(selectCharacterMutation);
+    const { result: allCharacters } = useQuery(getCharactersQuery);
+
+    const characters = useResult(allCharacters, [], (data) => {
+      selectCharacter({ characterId: data.characters[0].id });
+      return data.characters;
+    });
+
+    return { characters };
+  },
+});
 </script>
+
+<style scoped>
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+</style>

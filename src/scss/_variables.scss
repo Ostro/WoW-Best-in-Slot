@@ -1,0 +1,14 @@
+@use "sass:color";
+
+$primary-color: #68BD96;
+$lighten-primary: lighten($primary-color, 25);
+$secondary-color: #EBCEDC;
+
+$white: #F7F2F0;
+$black: #0B0A0D;
+$lightBlack: lighten($black, 50);
+
+$onDarkBG: $white;
+$onLightBG: $black;
+
+$buttonGradient: linear-gradient(155deg, $primary-color 0%, $secondary-color 80%);

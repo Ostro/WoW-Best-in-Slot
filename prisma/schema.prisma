@@ -1,0 +1,68 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "generated/prismaClient"
+}
+
+generator typegraphql {
+  provider                 = "typegraphql-prisma"
+  output                   = "../prisma/generated/type-graphql"
+  emitTranspiledCode       = true
+  useUncheckedScalarInputs = true
+}
+
+model Character {
+  id        String     @id @default(uuid())
+  name      String
+  gearLists GearList[]
+}
+
+model GearList {
+  id          String     @id @default(uuid())
+  name        String
+  gears       Gear[]
+  Character   Character? @relation(fields: [characterId], references: [id])
+  characterId String?
+}
+
+model Gear {
+  id         String    @id @default(uuid())
+  name       String
+  slot       Slot
+  location   Dungeon
+  GearList   GearList? @relation(fields: [gearListId], references: [id])
+  gearListId String?
+}
+
+enum Dungeon {
+  NW
+  SOA
+  DOS
+  MISTS
+  HOA
+  SD
+  PF
+  TOP
+}
+
+enum Slot {
+  THW
+  OHW
+  OH
+  HEAD
+  NECK
+  SHOULDER
+  CLOAK
+  TORSO
+  BRACERS
+  GLOVES
+  BELT
+  LEGS
+  BOOTS
+  RING
+  TRINKET
+}

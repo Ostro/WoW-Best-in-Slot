@@ -14,5 +14,7 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-shadow': 'off', // replaced by ts-eslint rule below
+    '@typescript-eslint/no-shadow': 'error',
   },
 };
