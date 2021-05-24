@@ -15,6 +15,12 @@ generator typegraphql {
   useUncheckedScalarInputs = true
 }
 
+model User {
+  id       String @id @default(uuid())
+  username String
+  password String
+}
+
 model Character {
   id        String     @id @default(uuid())
   name      String

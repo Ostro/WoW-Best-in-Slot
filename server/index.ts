@@ -1,24 +1,35 @@
 import 'reflect-metadata';
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer, gql } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
-import { PrismaClient } from '../prisma/generated/prismaClient';
-import { resolvers } from '../prisma/generated/type-graphql';
+import express from 'express';
+import { bodyParserGraphQL } from 'body-parser-graphql';
+import prismaClient from './services/prismaClient';
+import { resolvers as PrismaResolvers } from '../prisma/generated/type-graphql';
+import basicAuth from './middlewares/basicAuth';
+import AuthResolver from './resolvers/auth.resolvers';
 
-const app = async () => {
+const startApp = async () => {
   const schema = await buildSchema({
-    resolvers,
+    resolvers: [...PrismaResolvers, AuthResolver],
     validate: false,
   });
-
-  const prisma = new PrismaClient();
 
   const server = new ApolloServer({
     schema,
     playground: true,
-    context: () => ({ prisma }),
+    context: () => ({ prisma: prismaClient }),
   });
 
-  server.listen({ port: 3000 }, () => console.log('Server running on port 3000'));
+  await server.start();
+
+  const app = express();
+
+  app.use(bodyParserGraphQL());
+  app.use(basicAuth);
+  server.applyMiddleware({ app });
+
+  await app.listen({ port: 3000 });
+  console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`);
 };
 
-app();
+startApp();
