@@ -28,3 +28,8 @@ export const getGearListQuery = gql`
     }
   }
 `;
+
+export const authenticateQuery = gql`query ($password: String!, $username: String!) {
+  authenticate(password: $password, username: $username)
+}
+`;

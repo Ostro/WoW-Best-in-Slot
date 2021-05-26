@@ -18,5 +18,6 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     'no-param-reassign': 'off',
     'class-methods-use-this': 'off',
+    'import/no-extraneous-dependencies': 'off',
   },
 };

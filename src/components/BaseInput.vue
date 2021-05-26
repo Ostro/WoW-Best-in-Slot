@@ -5,6 +5,7 @@
       :type="inputType"
       :value="input"
       required
+      autocomplete="off"
       @input="$emit('update:input', $event.target.value)"
     />
     <div class="label-input">

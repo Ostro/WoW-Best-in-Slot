@@ -1,21 +1,27 @@
 <template>
   <div class="sidebar">
-    <div
-      :class="['sidebar-item', { selected: selectedCharacter === char.id }]"
-      v-for="char in characters"
-      :key="char.id"
-      @click.prevent="selectCharacter(char.id)"
-    >
-      <span class="item-content">{{ char.name }}</span>
+    <div class="sidebar-items">
+      <div
+        :class="['sidebar-item', { selected: selectedCharacter === char.id }]"
+        v-for="char in characters"
+        :key="char.id"
+        @click.prevent="selectCharacter(char.id)"
+      >
+        <span class="item-content">{{ char.name }}</span>
+      </div>
     </div>
+    <BaseButton class="logout-button" text="Logout" :onClick="logout" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { useQuery, useMutation, useResult } from '@vue/apollo-composable';
+import router from '@/router';
 import { selectCharacterMutation } from '../localState/mutations';
 import { selectedCharacterQuery } from '../localState/queries';
+import BaseButton from './BaseButton.vue';
+import { logout } from '../utils/auth';
 
 interface Character {
   id: string;
@@ -24,6 +30,9 @@ interface Character {
 
 export default defineComponent({
   name: 'Sidebar',
+  components: {
+    BaseButton,
+  },
   props: {
     characters: Array as PropType<Array<Character>>,
   },
@@ -42,6 +51,9 @@ export default defineComponent({
     return {
       selectedCharacter,
       selectCharacter,
+      logout: () => {
+        logout(router);
+      },
     };
   },
 });
@@ -51,10 +63,15 @@ export default defineComponent({
 .sidebar {
   display: flex;
   flex-direction: column;
-
+  justify-content: space-between;
   margin: 50px 0;
   padding: 50px 0;
   border-right: $lightBlack solid 3px;
+}
+
+.sidebar-items {
+  margin: 5px 30px;
+
 }
 
 .sidebar-item {
@@ -62,7 +79,6 @@ export default defineComponent({
   display: flex;
   font-size: 24px;
   padding: 20px 30px;
-  margin: 5px 30px;
   overflow: hidden;
 }
 
@@ -87,5 +103,9 @@ export default defineComponent({
   .item-content::after {
     transform: translateX(0%);
   }
+}
+
+.logout-button {
+  margin: 5px 30px;
 }
 </style>

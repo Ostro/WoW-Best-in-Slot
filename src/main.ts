@@ -1,16 +1,24 @@
 import { createApp, provide, h } from 'vue';
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { DefaultApolloClient } from '@vue/apollo-composable';
+import { setContext } from '@apollo/client/link/context';
 import App from './App.vue';
 import localState from './localState';
 import { selectedCharacterQuery, selectedGearListQuery } from './localState/queries';
+import router from './router';
+import { getAuthHeader } from './utils/auth';
 
 const cache = new InMemoryCache({});
 cache.writeQuery({ query: selectedCharacterQuery, data: { selectedCharacter: '' } });
 cache.writeQuery({ query: selectedGearListQuery, data: { selectedGearList: '' } });
 
-const apolloClient = new ApolloClient({
+const authenticationMiddleware = setContext(() => ({ headers: getAuthHeader() }));
+const httpLink = authenticationMiddleware.concat(createHttpLink({
   uri: 'http://localhost:3000/graphql',
+}));
+
+const apolloClient = new ApolloClient({
+  link: httpLink,
   cache,
   typeDefs: localState.typeDefs,
   resolvers: localState.resolvers,
@@ -24,4 +32,6 @@ createApp({
   render() {
     return h(App);
   },
-}).mount('#app');
+})
+  .use(router)
+  .mount('#app');

@@ -1,8 +1,9 @@
 import 'reflect-metadata';
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import express from 'express';
 import { bodyParserGraphQL } from 'body-parser-graphql';
+import cors from 'cors';
 import prismaClient from './services/prismaClient';
 import { resolvers as PrismaResolvers } from '../prisma/generated/type-graphql';
 import basicAuth from './middlewares/basicAuth';
@@ -24,6 +25,7 @@ const startApp = async () => {
 
   const app = express();
 
+  app.use(cors());
   app.use(bodyParserGraphQL());
   app.use(basicAuth);
   server.applyMiddleware({ app });
