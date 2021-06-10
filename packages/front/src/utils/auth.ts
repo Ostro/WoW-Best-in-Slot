@@ -1,7 +1,6 @@
 import { Router } from 'vue-router';
 
 export function getAuthHeader(): Record<string, string> {
-  console.log('calling get Auth header');
   // return authorization header with basic auth credentials
   const authHeader = localStorage.getItem('authHeader');
 

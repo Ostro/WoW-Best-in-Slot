@@ -5,7 +5,7 @@ import express from 'express';
 import { bodyParserGraphQL } from 'body-parser-graphql';
 import cors from 'cors';
 import prismaClient from './services/prismaClient';
-import { resolvers as PrismaResolvers } from '../prisma/generated/type-graphql';
+import { resolvers as PrismaResolvers } from './prisma/generated/type-graphql';
 import basicAuth from './middlewares/basicAuth';
 import AuthResolver from './resolvers/auth.resolvers';
 

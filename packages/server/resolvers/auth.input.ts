@@ -2,9 +2,9 @@ import { InputType, Field } from 'type-graphql';
 
 @InputType()
 export default class AuthInput {
-  @Field()
+  @Field(() => String)
   username: string;
 
-  @Field()
+  @Field(() => String)
   password: string;
 }

@@ -17,7 +17,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { useQuery, useMutation, useResult } from '@vue/apollo-composable';
-import router from '@/router';
+import router from '../router';
 import { selectCharacterMutation } from '../localState/mutations';
 import { selectedCharacterQuery } from '../localState/queries';
 import BaseButton from './BaseButton.vue';
